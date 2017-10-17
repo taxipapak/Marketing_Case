@@ -1,0 +1,2 @@
+[mergetool "nbmerge"]
+  cmd = nbmerge $LOCAL $BASE $REMOTE $MERGED
