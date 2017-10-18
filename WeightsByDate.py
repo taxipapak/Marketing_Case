@@ -28,4 +28,30 @@ def GetWeights(PictureDay, SurveyDay):
         PictureWeight = float(PictureDays) / SecondPeriod
     return PictureWeight
 
-np.average(df["Values"], weights=GetWeights(df["PictureDay"], df["SurveyDay"]))
+#np.average(df["Values"], weights=GetWeights(df["PictureDay"], df["SurveyDay"]))
+
+def Get_Linear_Weight(peak_date,given_date, days_drop_interval = 90):
+    '''
+    Constructs a triangle which has a peak value of 1 in the peak_date 
+    and then linearly descends until it reaches 0 in days_interval days
+    
+    type(peak_date) = datetime.datetime
+    type(given_date) = datetime.datetime
+    days_drop_interval = int
+    
+    Usage:
+    
+    peak_date=datetime.datetime(2017,10,20)
+    given_date=datetime.datetime(2018,1,21)
+    Get_Linear_Weight(peak_date,given_date,days_drop_interval=200)
+    > 0.9535
+    
+    Get_Linear_Weight(peak_date,given_date,days_drop_interval=30)
+    > 0
+    '''
+    #peak_date=datetime.datetime(peak_date)
+    #given_date=datetime.datetime(given_date)
+    diff = peak_date-given_date
+    if abs(diff)>datetime.timedelta(days_drop_interval):
+        return 0
+    return 1-(abs(diff.days)/float(days_drop_interval))
