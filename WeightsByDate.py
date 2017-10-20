@@ -55,3 +55,25 @@ def Get_Linear_Weight(peak_date,given_date, days_drop_interval = 90):
     if abs(diff)>datetime.timedelta(days_drop_interval):
         return 0
     return 1-(abs(diff.days)/float(days_drop_interval))
+
+def Get_Uniform_Weight(peak_date,given_date, days_drop_interval = 90):
+    '''
+    Returns 1 if peak date within specified (days) interval from the given date 
+    
+    type(peak_date) = datetime.datetime
+    type(given_date) = datetime.datetime
+    days_drop_interval = int
+    
+    Usage:
+    
+    peak_date=datetime.datetime(2017,10,20)
+    given_date=datetime.datetime(2018,1,21)
+    Get_Linear_Weight(peak_date,given_date,days_drop_interval=200)
+    > 1
+    
+    Get_Linear_Weight(peak_date,given_date,days_drop_interval=30)
+    > 0
+    '''
+    if abs(diff)>datetime.timedelta(days_drop_interval):
+        return 0
+    return 1
