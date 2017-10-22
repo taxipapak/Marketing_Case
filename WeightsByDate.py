@@ -2,7 +2,7 @@ import datetime
 import numpy as np
 
 
-def GetWeights(PictureDay, SurveyDay):
+def GetWeights(PictureDay, SurveyDay): #Maarten - not working properly
     ##### Creating scale
     #SurveyDay = datetime.date.today() # placeholder
     # Adding and subtracting months 
@@ -30,13 +30,12 @@ def GetWeights(PictureDay, SurveyDay):
 
 #np.average(df["Values"], weights=GetWeights(df["PictureDay"], df["SurveyDay"]))
 
-def Get_Linear_Weight(peak_date,given_date, days_drop_interval = 90):
+def Get_Linear_Weight_old(peak_date,given_date, days_drop_interval = 90):
     '''
     Constructs a triangle which has a peak value of 1 in the peak_date 
     and then linearly descends until it reaches 0 in days_interval days
     
-    type(peak_date) = datetime.datetime
-    type(given_date) = datetime.datetime
+    type(diff) = datetime.timedelta
     days_drop_interval = int
     
     Usage:
@@ -50,13 +49,62 @@ def Get_Linear_Weight(peak_date,given_date, days_drop_interval = 90):
     > 0
     '''
     #peak_date=datetime.datetime(peak_date)
+    
     #given_date=datetime.datetime(given_date)
     diff = peak_date-given_date
     if abs(diff)>datetime.timedelta(days_drop_interval):
         return 0
     return 1-(abs(diff.days)/float(days_drop_interval))
 
-def Get_Uniform_Weight(peak_date,given_date, days_drop_interval = 90):
+def Get_Linear_Weight(diff, days_drop_interval = 90):
+    '''
+    Constructs a triangle which has a peak value of 1 in the peak_date 
+    and then linearly descends until it reaches 0 in days_interval days
+    
+    type(peak_date) = datetime.datetime
+    type(given_date) = datetime.datetime
+    days_drop_interval = int
+    
+    Usage:
+    
+    diff = Timedelta('-48 days +10:04:34')
+    Get_Linear_Weight(peak_date,given_date,days_drop_interval=200)
+    > 0.9535
+        
+    diff = Timedelta('-48 days +10:04:34')
+    Get_Linear_Weight(peak_date,given_date,days_drop_interval=30)
+    > 0
+    '''
+    #peak_date=datetime.datetime(peak_date)
+    #given_date=datetime.datetime(given_date)
+    #diff=peak_date-given_date
+    if abs(diff)>datetime.timedelta(days_drop_interval):
+        return 0
+    return 1-(abs(diff.days)/float(days_drop_interval))
+
+    
+    
+def Get_Uniform_Weight(diff, days_drop_interval = 90):
+    '''
+    Returns 1 if peak date within specified (days) interval from the given date 
+    
+    type(diff) = datetime.timedelta
+    days_drop_interval = int
+    
+    Usage:
+    
+    diff = Timedelta('-48 days +10:04:34')
+    Get_Linear_Weight(peak_date,given_date,days_drop_interval=200)
+    > 1
+    
+    diff = Timedelta('-248 days +10:04:34')
+    > 0
+    '''
+    if abs(diff)>datetime.timedelta(days_drop_interval):
+        return 0
+    return 1
+
+def Get_Uniform_Weight_old(peak_date,given_date, days_drop_interval = 90):
     '''
     Returns 1 if peak date within specified (days) interval from the given date 
     
